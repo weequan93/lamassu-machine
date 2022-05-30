@@ -8,7 +8,7 @@ Error.stackTraceLimit = 50
 require('../logging')
 
 var minimist = require('minimist')
-var Brain = require('../lib/brain')
+var HyperBrain = require('../lib/hyper/hyperBrain')
 var Configuration = require('../lib/configuration.js')
 
 var bailed = false
@@ -31,7 +31,7 @@ function startBrain () {
 
   var config = Configuration.loadConfig(commandLine)
 
-  brain = new Brain(config)
+  brain = new HyperBrain(config)
   brain.on('error', bail)
   brain.run()
 }

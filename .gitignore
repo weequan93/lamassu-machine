@@ -77,3 +77,4 @@ stress-test/config.json
 result.jpg
 
 build-scripts/update.tar
+.push.settings.jsonc
