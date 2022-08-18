@@ -34,6 +34,35 @@ function diskLog (level, timestamp, msg) {
   fs.appendFile(getLogFile(), line, () => {})
 }
 
+function diskLogWS(level, timestamp, msg, ws) {
+  const line = JSON.stringify({
+    id: uuid.v4(),
+    timestamp,
+    serial: getSerial(timestamp),
+    level,
+    msg
+  }) + '\n'
+  fs.appendFile(getLogFile(), line, () => { })
+
+  const sendWS = function(){
+    ws.emit("atm_log", JSON.stringify({
+      body: {
+        "content": msg,
+        "log_level": level,
+        "log_time": timestamp
+      }
+    }, function(res){
+      if(res!= "" && res != null){
+        const resJSON = JSON.parse(res)
+        if (resJSON.code != 0){
+          sendWS();
+        }
+      }
+    }))
+  }
+  sendWS();
+}
+
 clim.logWrite = function (level, prefixes, msg) {
   const timestamp = clim.getTime()
   diskLog(level, timestamp, msg)
@@ -41,6 +70,17 @@ clim.logWrite = function (level, prefixes, msg) {
   if (prefixes.length > 0) line += ' ' + prefixes.join(' ')
   line += ' ' + msg
   process.stderr.write(line + '\n')
+}
+
+function initWSWriteLog(ws){
+  clim.logWrite = function (level, prefixes, msg) {
+    const timestamp = clim.getTime()
+    diskLogWS(level, timestamp, msg, ws)
+    var line = timestamp + ' ' + level
+    if (prefixes.length > 0) line += ' ' + prefixes.join(' ')
+    line += ' ' + msg
+    process.stderr.write(line + '\n')
+  }
 }
 
 /**
@@ -61,3 +101,7 @@ function getLogFile () {
 
 fs.mkdir(path.resolve(dataPath, 'log'), () => {})
 clim(console, true)
+
+module.exports = {
+  initWSWriteLog
+}
