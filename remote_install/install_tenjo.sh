@@ -18,6 +18,7 @@ decho () {
   echo `date +"%H:%M:%S"` $1 >> $LOG_FILE
 }
 
+
 ATM=$1
 
 echo -e "\nStarting \033[1mhyper-server\033[0m install. This will take a few minutes...\n"
