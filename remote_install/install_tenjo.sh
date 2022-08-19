@@ -11,7 +11,6 @@ DATA_DIR=/opt/hyper-machine/data
 DATA_DIR_HYPER_DB=/opt/hyper-machine/data/tx-hyperdb
 FRONT_END_DOWNLOAD=https://atm-frontend.s3.ap-south-1.amazonaws.com/default/build.zip
 BROWSER_DIR=/opt/hyper-browser
-BROWSER_SERVER_DIR=/opt/hyper-server-browser
 
 decho () {
   echo `date +"%H:%M:%S"` $1
@@ -140,19 +139,14 @@ cat <<EOF > $DATA_DIR/connection-info.json
 }
 EOF
 
+cp /opt/lamassu-machine/data/machine-info.json /opt/hyper-machine/data/machine-info.json
+
 decho "Done! Starting install of browser."
 
 mkdir -p $BROWSER_DIR
 cd $BROWSER_DIR
 wget $FRONT_END_DOWNLOAD
 unzip build.zip
-
-mkdir -p $BROWSER_SERVER_DIR
-cd $BROWSER_SERVER_DIR
-cat <<EOF > $BROWSER_SERVER_DIR/some set of file
-content
-EOF
-
 
 decho "Setting up supervisor..."
 cat <<EOF > /etc/supervisor/conf.d/hyper-machine.conf
@@ -192,6 +186,7 @@ stderr_logfile_backups=2
 EOF
 
 decho "Remove original service"
+mkdir -p /opt/backup/supervisor/conf.d
 mv /etc/supervisor/conf.d/lamassu-updater.conf /opt/backup/supervisor/conf.d/lamassu-updater.conf
 mv /etc/supervisor/conf.d/lamassu-watchdog.conf /opt/backup/supervisor/conf.d/lamassu-watchdog.conf
 mv /etc/supervisor/conf.d/lamassu-machine.conf /opt/backup/supervisor/conf.d/lamassu-machine.conf
