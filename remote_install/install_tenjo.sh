@@ -18,6 +18,27 @@ decho () {
   echo `date +"%H:%M:%S"` $1 >> $LOG_FILE
 }
 
+retry() {
+  local -r -i max_attempts="$1"; shift
+  local -r cmd="$@"
+  local -i attempt_num=1
+
+  until $cmd
+  do
+    if (( attempt_num == max_attempts ))
+    then
+        echo
+        echo "****************************************************************"
+        echo "Attempt $attempt_num failed and there are no more attempts left! ($cmd)"
+        return 1
+    else
+        echo
+        echo "****************************************************************"
+        echo "Attempt $attempt_num failed! Trying again in $attempt_num seconds..."
+        sleep $(( attempt_num++ ))
+    fi
+  done
+}
 
 ATM=$1
 
@@ -33,7 +54,7 @@ git clone "$GIT_REPOSITORY" "$INSTALL_DIR"
 cd "$INSTALL_DIR"
 
 git checkout "$GIT_BRANCH"
-decho "current working directory = $pwd"
+
 decho "Installing hyper-machine ..."
 retry 3 npm install >> $LOG_FILE 2>&1
 
