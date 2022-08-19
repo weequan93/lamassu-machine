@@ -18,15 +18,10 @@ decho () {
   echo `date +"%H:%M:%S"` $1 >> $LOG_FILE
 }
 
-cat <<'FIG'
-HYPER BC
-FIG
-
-echo
-
 while :
 do
   read -p "Before starting, please insert your atm no for further registration: " atmno
+  echo $atmno
   if [ -z "$atmno" ]
   then
     echo -e 'atm no cannot be blank, please try again.'
