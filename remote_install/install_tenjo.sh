@@ -39,7 +39,7 @@ retry() {
   done
 }
 
-ATM=$1
+atmno=$1
 
 echo -e "\nStarting \033[1mhyper-server\033[0m install. This will take a few minutes...\n"
 
@@ -130,7 +130,7 @@ cat <<EOF > $INSTALL_DIR/device_config.json
 }
 EOF
 
-cat <<EOF > $DATA_DIR/connection-info.json
+cat <<EOF > $DATA_DIR/connection_info.json
 {
   "host": "localhost",
   "ATM-Number": "$atmno",
