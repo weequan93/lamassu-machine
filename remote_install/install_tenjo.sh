@@ -18,6 +18,8 @@ decho () {
   echo `date +"%H:%M:%S"` $1 >> $LOG_FILE
 }
 
+echo $0 $1 $2
+
 while :
 do
   read -p "Before starting, please insert your atm no for further registration: " atmno
