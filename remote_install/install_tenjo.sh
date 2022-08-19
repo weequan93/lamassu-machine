@@ -142,10 +142,12 @@ EOF
 
 decho "Done! Starting install of browser."
 
+mkdir -p $BROWSER_DIR
 cd $BROWSER_DIR
 wget $FRONT_END_DOWNLOAD
 unzip build.zip
 
+mkdir -p $BROWSER_SERVER_DIR
 cd $BROWSER_SERVER_DIR
 cat <<EOF > $BROWSER_SERVER_DIR/some set of file
 content
