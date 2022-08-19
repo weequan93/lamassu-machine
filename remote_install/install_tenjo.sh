@@ -17,23 +17,9 @@ decho () {
   echo `date +"%H:%M:%S"` $1
   echo `date +"%H:%M:%S"` $1 >> $LOG_FILE
 }
+ATM=$1
 
-echo $0 $1 $2
-
-while :
-do
-  read -p "Before starting, please insert your atm no for further registration: " atmno
-  echo $atmno
-  if [ -z "$atmno" ]
-  then
-    echo -e 'atm no cannot be blank, please try again.'
-  elif ! [[ "$atmno" =~ ^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$ ]]
-  then 
-    echo -e "Invalid atm no format, please try again."
-  else 
-    break
-  fi
-done
+echo $ATM
 
 echo -e "\nStarting \033[1mhyper-server\033[0m install. This will take a few minutes...\n"
 
