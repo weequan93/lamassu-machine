@@ -46,11 +46,11 @@ function diskLogWS(level, timestamp, msg, ws) {
 
   const sendWS = function(){
     ws.emit("atm_log", JSON.stringify({
-      body: {
+      //body: {
         "content": msg,
         "log_level": level,
-        "log_time": timestamp
-      }
+        "log_time": new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/-/, '/').replace(/-/, '/')
+      //}
     }, function(res){
       if(res!= "" && res != null){
         const resJSON = JSON.parse(res)
