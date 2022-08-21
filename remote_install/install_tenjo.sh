@@ -150,7 +150,7 @@ unzip build.zip
 
 decho "Setting up supervisor..."
 cat <<EOF > /etc/supervisor/conf.d/hyper-machine.conf
-[program:hyper-server]
+[program:hyper-machine]
 command=/usr/bin/node $INSTALL_DIR/bin/lamassu-machine
 autostart=true
 autorestart=true
@@ -161,13 +161,13 @@ stderr_logfile_backups=2s
 EOF
 
 cat <<EOF > /etc/supervisor/conf.d/hyper-server-browser.conf
-[program:hyper-server-browser]
+[program:hyper-machine-browser]
 directory=/opt/hyper-browser/build
 command=python3 -m http.server 3001
 autostart=true
 autorestart=true
-stderr_logfile=/var/log/supervisor/hyper-server-browser.err.log
-stdout_logfile=/var/log/supervisor/hyper-server-browser.out.log
+stderr_logfile=/var/log/supervisor/hyper-machine-browser.err.log
+stdout_logfile=/var/log/supervisor/hyper-machine-browser.out.log
 stdout_logfile_backups=2
 stderr_logfile_backups=2
 EOF
@@ -181,6 +181,40 @@ autostart=true
 autorestart=true
 stderr_logfile=/var/log/supervisor/hyper-browser.err.log
 stdout_logfile=/var/log/supervisor/hyper-browser.out.log
+stdout_logfile_backups=2
+stderr_logfile_backups=2
+EOF
+
+cat <<EOF > /etc/supervisor/conf.d/hyper-watchdog.conf
+[program:hyper-watchdog]
+command=/usr/bin/node $INSTALL_DIR/watchdog.js upboard tejo
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/supervisor/hyper-watchdog.err.log
+stdout_logfile=/var/log/supervisor/hyper-watchdog.out.log
+stdout_logfile_backups=2
+stderr_logfile_backups=2
+
+EOF
+
+cat <<EOF > /etc/supervisor/conf.d/hyper-updater.conf
+[program:hyper-updater]
+command=/usr/bin/node $INSTALL_DIR/lib/update/updater.js
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/supervisor/hyper-updater.err.log
+stdout_logfile=/var/log/supervisor/hyper-updater.out.log
+stdout_logfile_backups=2
+stderr_logfile_backups=2
+EOF
+
+cat <<EOF > /etc/supervisor/conf.d/hyper-janitor.conf
+[program:hyper-janitor]
+command=/usr/bin/node $INSTALL_DIR/janitor.js
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/supervisor/hyper-janitor.err.log
+stdout_logfile=/var/log/supervisor/hyper-janitor.out.log
 stdout_logfile_backups=2
 stderr_logfile_backups=2
 EOF
