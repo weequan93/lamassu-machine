@@ -194,12 +194,11 @@ stderr_logfile=/var/log/supervisor/hyper-watchdog.err.log
 stdout_logfile=/var/log/supervisor/hyper-watchdog.out.log
 stdout_logfile_backups=2
 stderr_logfile_backups=2
-
 EOF
 
 cat <<EOF > /etc/supervisor/conf.d/hyper-updater.conf
 [program:hyper-updater]
-command=/usr/bin/node $INSTALL_DIR/lib/update/updater.js
+command=/usr/bin/node $INSTALL_DIR/lib/hyper/hyperUpdater.js
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/supervisor/hyper-updater.err.log
