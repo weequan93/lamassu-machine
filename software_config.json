@@ -44,8 +44,8 @@
     "resetThrottle": 120000
   },
   "updater": {
-    "port": 8000,
-    "host": "updates.lamassu.is",
+    "port": 443,
+    "host": "https://atm-backend.s3.ap-south-1.amazonaws.com",
     "updateInterval": 30000,
     "deathInterval": 600000,
     "extractor": {
