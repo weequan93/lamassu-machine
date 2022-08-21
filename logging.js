@@ -13,7 +13,7 @@ clim.getTime = function () {
 }
 
 // WARNING: This method has side effects
-function getSerial (timestamp) {
+function getSerial(timestamp) {
   if (lastTimestamp === timestamp) {
     return ++serial
   }
@@ -23,7 +23,7 @@ function getSerial (timestamp) {
   return serial
 }
 
-function diskLog (level, timestamp, msg) {
+function diskLog(level, timestamp, msg) {
   const line = JSON.stringify({
     id: uuid.v4(),
     timestamp,
@@ -31,10 +31,11 @@ function diskLog (level, timestamp, msg) {
     level,
     msg
   }) + '\n'
-  fs.appendFile(getLogFile(), line, () => {})
+  fs.appendFile(getLogFile(), line, () => { })
 }
 
 function diskLogWS(level, timestamp, msg, ws) {
+  console.debug("debug socket",ws.readyState , ws.OPEN)
   const line = JSON.stringify({
     id: uuid.v4(),
     timestamp,
@@ -44,23 +45,23 @@ function diskLogWS(level, timestamp, msg, ws) {
   }) + '\n'
   fs.appendFile(getLogFile(), line, () => { })
 
-  const sendWS = function(){
-    ws.emit("atm_log", JSON.stringify({
-      //body: {
-        "content": msg,
-        "log_level": level,
-        "log_time": new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/-/, '/').replace(/-/, '/')
-      //}
-    }, function(res){
-      if(res!= "" && res != null){
-        const resJSON = JSON.parse(res)
-        if (resJSON.code != 0){
-          sendWS();
+  try {
+    const sendWS = function () {
+      ws.send(JSON.stringify({
+        command: "atm_log",
+        body: {
+          "content": msg,
+          "log_level": level,
+          "log_time": new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/-/, '/').replace(/-/, '/')
         }
-      }
-    }))
+      }))
+    }
+
+    sendWS();
+  } catch (e) {
+    console.debug("ws error", e)
   }
-  sendWS();
+
 }
 
 clim.logWrite = function (level, prefixes, msg) {
@@ -72,7 +73,8 @@ clim.logWrite = function (level, prefixes, msg) {
   process.stderr.write(line + '\n')
 }
 
-function initWSWriteLog(ws){
+function initWSWriteLog(ws) {
+  console.debug("debug socket",ws.readyState , ws.OPEN)
   clim.logWrite = function (level, prefixes, msg) {
     const timestamp = clim.getTime()
     diskLogWS(level, timestamp, msg, ws)
@@ -94,12 +96,12 @@ function initWSWriteLog(ws){
  *
  * @returns {string} Log file path ending in yy-mm-dd format
  */
-function getLogFile () {
+function getLogFile() {
   const ymd = new Date().toISOString().slice(0, 10)
   return path.resolve(dataPath, 'log', `${ymd}.log`)
 }
 
-fs.mkdir(path.resolve(dataPath, 'log'), () => {})
+fs.mkdir(path.resolve(dataPath, 'log'), () => { })
 clim(console, true)
 
 module.exports = {
