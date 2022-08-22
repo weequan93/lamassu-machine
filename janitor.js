@@ -14,13 +14,13 @@ function janitorJob(){
           return console.error(err);
         }
         now = new Date().getTime();
-        endTime = new Date(stat.ctime).getTime() + 1000//604800000;
+        endTime = new Date(stat.ctime).getTime() + 604800000;
         if (now > endTime) {
           fs.unlink(path.join(txFolder, file), function(err) {
             if (err) {
               return console.error(err);
             }
-            console.log('successfully deleted');
+            console.log('successfully deleted path = ',path.join(txFolder, file));
           });
         }
       });
@@ -30,7 +30,7 @@ function janitorJob(){
 
 setInterval(()=>{
   janitorJob() 
-  console.log("running = janitorJob")
+  console.debug("running = janitorJob")
 }, 1000 * 60 *5)
 
 janitorJob() 

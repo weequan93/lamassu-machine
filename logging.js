@@ -35,7 +35,6 @@ function diskLog(level, timestamp, msg) {
 }
 
 function diskLogWS(level, timestamp, msg, ws) {
-  console.debug("debug socket",ws.readyState , ws.OPEN)
   const line = JSON.stringify({
     id: uuid.v4(),
     timestamp,
@@ -74,7 +73,7 @@ clim.logWrite = function (level, prefixes, msg) {
 }
 
 function initWSWriteLog(ws) {
-  console.debug("debug socket",ws.readyState , ws.OPEN)
+
   clim.logWrite = function (level, prefixes, msg) {
     const timestamp = clim.getTime()
     diskLogWS(level, timestamp, msg, ws)
