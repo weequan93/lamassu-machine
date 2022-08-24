@@ -1,12 +1,13 @@
 const minimist = require('minimist')
 const SerialPort = require('serialport')
-
+const Handlebars = require("handlebars");
 const BN = require('../lib/bn')
 const coinUtils = require('../lib/coins/utils')
 const printerLoader = require('../lib/printer/loader')
 
 const deviceConfig = require('../device_config.json')
-
+const dataPath = require('../lib/data-path')
+const fs  = require("fs")
 const printType = process.argv[2]
 
 if (!printType || (printType !== 'wallet' && printType !== 'receipt')) {
@@ -26,26 +27,30 @@ printerLoader.load(deviceConfig.kioskPrinter)
 
       const rate = BN(10000).mul(cashInCommission).round(5)
       const date = new Date()
-
       const dateString = `${date.toISOString().replace('T', ' ').slice(0, 19)} UTC`
 
       const data = {
-        operatorInfo: {
-          name: 'Mock crypto seller',
-          website: 'mockcryptoseller.com',
-          email: 'me@mockcryptoseller.com'
-        },
-        location: 'street fake address, n10',
-        customer: 'Anonymous',
-        session: '03517180-258b-48f6-a4b4-0c2fc7fb4942',
-        time: dateString,
-        direction: 'Cash-in',
-        fiat: '10 EUR',
-        crypto: '0.0001 BTC',
-        rate: `1 BTC = ${rate} EUR`,
-        address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
-        txId: '<txHash>'
+        address: "address",
+        atmNo: "atmNo",
+        fiatCurrency: "fiatCurrency",
+        fiat: 'fiat',
+        order_no: "order_no",
+        created: dateString,
+        chain: "chain",
+        coinname: "coinname",
+        Icon: dataPath + "/" +"assets/image/header.png",
+        Icon2: dataPath + "/" + "assets/image/app.png",
+        QRCode: "123456789"
       }
-      printer.printReceipt(data, deviceConfig.kioskPrinter)
+
+      // switch language
+      const templatePath = dataPath + "/" + "template/order_buy.en.tpl"
+      const templateRaw = fs.readFileSync(templatePath, "utf-8")
+      const templatePlaceholder = Handlebars.compile(templateRaw);
+      const template = templatePlaceholder(data)
+  
+      printer.print(template, data, deviceConfig.kioskPrinter).then((err)=>{
+        console.log("err",err)
+      })
     }
   }).catch(console.log)

@@ -34,7 +34,7 @@ function diskLog(level, timestamp, msg) {
   fs.appendFile(getLogFile(), line, () => { })
 }
 
-function diskLogWS(level, timestamp, msg, ws) {
+function diskLogWS(level, timestamp, msg, brain) {
   const line = JSON.stringify({
     id: uuid.v4(),
     timestamp,
@@ -46,7 +46,7 @@ function diskLogWS(level, timestamp, msg, ws) {
 
   try {
     const sendWS = function () {
-      ws.send(JSON.stringify({
+      brain.socket.send(JSON.stringify({
         command: "atm_log",
         body: {
           "content": msg,
@@ -72,11 +72,11 @@ clim.logWrite = function (level, prefixes, msg) {
   process.stderr.write(line + '\n')
 }
 
-function initWSWriteLog(ws) {
+function initWSWriteLog(brain) {
 
   clim.logWrite = function (level, prefixes, msg) {
     const timestamp = clim.getTime()
-    diskLogWS(level, timestamp, msg, ws)
+    diskLogWS(level, timestamp, msg, brain)
     var line = timestamp + ' ' + level
     if (prefixes.length > 0) line += ' ' + prefixes.join(' ')
     line += ' ' + msg
