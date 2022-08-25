@@ -149,6 +149,7 @@ cd $BROWSER_DIR
 wget $FRONT_END_DOWNLOAD
 unzip build.zip
 
+mkdir -p $MAINTENANCE_DIR
 cat <<EOF > $MAINTENANCE_DIR/index.html
 <!doctype html>
 <title>Site Maintenance</title>
@@ -178,7 +179,7 @@ autorestart=true
 stderr_logfile=/var/log/supervisor/hyper-machine.err.log
 stdout_logfile=/var/log/supervisor/hyper-machine.out.log
 stdout_logfile_backups=2
-stderr_logfile_backups=2s
+stderr_logfile_backups=2
 EOF
 
 decho "Setting up supervisor..."
@@ -234,7 +235,7 @@ EOF
 
 cat <<EOF > /etc/supervisor/conf.d/hyper-updater.conf
 [program:hyper-updater]
-command=/usr/bin/node $INSTALL_DIR/lib/hyper/hyperUpdater.js
+command=/usr/bin/node $INSTALL_DIR/lib/update/updater.js
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/supervisor/hyper-updater.err.log
@@ -260,6 +261,9 @@ mv /etc/supervisor/conf.d/lamassu-updater.conf /opt/backup/supervisor/conf.d/lam
 mv /etc/supervisor/conf.d/lamassu-watchdog.conf /opt/backup/supervisor/conf.d/lamassu-watchdog.conf
 mv /etc/supervisor/conf.d/lamassu-machine.conf /opt/backup/supervisor/conf.d/lamassu-machine.conf
 mv /etc/supervisor/conf.d/lamassu-browser.conf /opt/backup/supervisor/conf.d/lamassu-browser.conf
+
+cp /opt/lamassu-machine/licenses.json /opt/hyper-machine/licenses.json
+cp -r /opt/lamassu-machine/node_modules/v4l2camera /opt/hyper-machine/node_modules
 
 service supervisor restart >> $LOG_FILE 2>&1
 

@@ -42,7 +42,7 @@ function frontend() {
     })
   }).then(() => {
     return new Promise((resolve) => {
-      const cmd = 'supervisorctl restart hyper-server-browser hyper-browser'
+      const cmd = 'supervisorctl restart hyper-machine-browser hyper-browser'
       console.log(cmd)
       cp.exec(cmd, null, function () {
         return resolve()
@@ -66,7 +66,7 @@ function start() {
     return hyperMachine();
   }).then(() => {
     return new Promise((resolve, reject) => {
-      const cmd = 'supervisorctl restart hyper-janitor hyper-server'
+      const cmd = 'supervisorctl restart hyper-janitor hyper-machine'
       console.log(cmd)
       cp.exec(cmd, null, function () {
         return resolve()
