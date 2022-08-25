@@ -11,6 +11,7 @@ DATA_DIR=/opt/hyper-machine/data
 DATA_DIR_HYPER_DB=/opt/hyper-machine/data/tx-hyperdb
 FRONT_END_DOWNLOAD=https://atm-frontend.s3.ap-south-1.amazonaws.com/default/build.zip
 BROWSER_DIR=/opt/hyper-browser
+MAINTENANCE_DIR=/opt/hyper-maintenance
 
 decho () {
   echo `date +"%H:%M:%S"` $1
@@ -148,7 +149,27 @@ cd $BROWSER_DIR
 wget $FRONT_END_DOWNLOAD
 unzip build.zip
 
-decho "Setting up supervisor..."
+cat <<EOF > $MAINTENANCE_DIR/index.html
+<!doctype html>
+<title>Site Maintenance</title>
+<style>
+  body { text-align: center; padding: 150px; }
+  h1 { font-size: 50px; }
+  body { font: 20px Helvetica, sans-serif; color: #333; }
+  article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+  a { color: #dc8100; text-decoration: none; }
+  a:hover { color: #333; text-decoration: none; }
+</style>
+
+<article>
+    <h1>We&rsquo;ll be back soon!</h1>
+    <div>
+        <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. If you need to you can always <a href="mailto:#">contact us</a>, otherwise we&rsquo;ll be back online shortly!</p>
+        <p>&mdash; The Team</p>
+    </div>
+</article>
+EOF
+
 cat <<EOF > /etc/supervisor/conf.d/hyper-machine.conf
 [program:hyper-machine]
 command=/usr/bin/node $INSTALL_DIR/bin/lamassu-machine
@@ -158,6 +179,21 @@ stderr_logfile=/var/log/supervisor/hyper-machine.err.log
 stdout_logfile=/var/log/supervisor/hyper-machine.out.log
 stdout_logfile_backups=2
 stderr_logfile_backups=2s
+EOF
+
+decho "Setting up supervisor..."
+
+cat <<EOF > /etc/supervisor/conf.d/hyper-maintenance.conf
+[program:hyper-maintenance]
+command=/usr/bin/chromium --kiosk  --incognito --disable-pinch $MAINTENANCE_DIR/index.html
+environment=DISPLAY=":0"
+user=ubilinux
+autostart=false
+autorestart=false
+stderr_logfile=/var/log/supervisor/hyper-maintenance.err.log
+stdout_logfile=/var/log/supervisor/hyper-maintenance.out.log
+stdout_logfile_backups=2
+stderr_logfile_backups=2
 EOF
 
 cat <<EOF > /etc/supervisor/conf.d/hyper-server-browser.conf
