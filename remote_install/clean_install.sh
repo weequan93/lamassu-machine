@@ -1,6 +1,9 @@
 
 set +e
 
+
+
+
 export LOG_FILE=/tmp/install.log
 
 INSTALL_DIR=/opt/hyper-machine
