@@ -126,7 +126,7 @@ cat <<EOF > $INSTALL_DIR/device_config.json
     "extractor": {
       "lamassuPubKeyFile": "/opt/certs/lamassu.pub.key"
     },
-    "packageJsonDir": "/opt/lamassu-machine"
+    "packageJsonDir": "/opt/hyper-machine"
   }
 }
 EOF
