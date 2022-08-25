@@ -8,5 +8,6 @@
 
 
 
+## 清除安装
 
-
+- $ curl -sS https://raw.githubusercontent.com/weequan93/lamassu-machine/hyper-7.5.2-wip/remote_install/clean_install.sh | bash -s
