@@ -1,5 +1,4 @@
 
-set -e
 
 export LOG_FILE=/tmp/install.log
 
