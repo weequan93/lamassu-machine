@@ -149,6 +149,7 @@ cd $BROWSER_DIR
 wget $FRONT_END_DOWNLOAD
 unzip build.zip
 
+mkdir -p $MAINTENANCE_DIR
 cat <<EOF > $MAINTENANCE_DIR/index.html
 <!doctype html>
 <title>Site Maintenance</title>
