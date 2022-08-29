@@ -41,6 +41,7 @@ retry() {
 }
 
 atmno=$1
+fiatCode=$2
 
 echo -e "\nStarting \033[1mhyper-server\033[0m install. This will take a few minutes...\n"
 
@@ -114,7 +115,7 @@ cat <<EOF > $INSTALL_DIR/device_config.json
     }
   },
   "billDispenser": {
-    "fiatCode": "usd",
+    "fiatCode": "$fiatCode",
     "model": "f56",
     "device": "/dev/ttyJ7",
     "cassettes": "4"
