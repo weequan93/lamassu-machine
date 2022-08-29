@@ -42,7 +42,7 @@ function frontend() {
     })
   }).then(() => {
     return new Promise((resolve) => {
-      const cmd = 'supervisorctl restart hyper-machine-browser hyper-browser'
+      const cmd = 'supervisorctl restart hyper-browser'
       console.log(cmd)
       cp.exec(cmd, null, function () {
         return resolve()

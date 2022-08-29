@@ -199,25 +199,13 @@ stdout_logfile_backups=2
 stderr_logfile_backups=2
 EOF
 
-cat <<EOF > /etc/supervisor/conf.d/hyper-server-browser.conf
-[program:hyper-machine-browser]
-directory=/opt/hyper-browser/build
-command=python3 -m http.server 3001
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/supervisor/hyper-machine-browser.err.log
-stdout_logfile=/var/log/supervisor/hyper-machine-browser.out.log
-stdout_logfile_backups=2
-stderr_logfile_backups=2
-EOF
-
 cat <<EOF > /etc/supervisor/conf.d/hyper-browser.conf
 [program:hyper-browser]
-command=/usr/bin/chromium --kiosk  --incognito --disable-pinch http://127.0.0.1:3001
+command=/usr/bin/chromium --kiosk  --incognito --disable-pinch file:///opt/hyper-browser/build/index.html
 environment=DISPLAY=":0"
 user=ubilinux
-autostart=true
-autorestart=true
+autostart=false
+autorestart=false
 stderr_logfile=/var/log/supervisor/hyper-browser.err.log
 stdout_logfile=/var/log/supervisor/hyper-browser.out.log
 stdout_logfile_backups=2
