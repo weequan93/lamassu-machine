@@ -77,6 +77,18 @@ function executeScript () {
   })
 }
 
+// stop updater
+async function stoptUpdater() {
+  const command = 'supervisorctl stop hyper-updater'
+  await new Promise((resolve, reject) => {
+    cp.execFile(command, [], {}, function (msg) {
+      console.log(msg)
+      return resolve()
+
+    })
+  })
+}
+
 function start () {
   t0 = Date.now()
   running = true
@@ -90,4 +102,5 @@ function cleanUp () {
   child = null
   fs.unlinkSync(RUNNING_PATH)
   running = false
+  stoptUpdater()
 }
