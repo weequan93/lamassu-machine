@@ -18,6 +18,7 @@
     "clim": "*",
     "codepage-encoder": "^1.0.0",
     "crypto-js": "^3.1.9-1",
+    "cryptocurrency-address-detector": "^1.1.2",
     "delay": "^3.1.0",
     "ethereumjs-icap": "^0.3.1",
     "findit": "~1.1.0",
