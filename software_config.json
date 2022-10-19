@@ -45,7 +45,8 @@
   },
   "updater": {
     "port": 443,
-    "host": "atm-backend.s3.ap-south-1.amazonaws.com",
+    "host": "atmv2.legenddigital.co",
+    "path":"/version/info",
     "updateInterval": 30000,
     "deathInterval": 600000,
     "extractor": {

@@ -10,6 +10,7 @@ var BASE = '/tmp/extract'
 var DONE_PATH = BASE + '/done.txt'
 var SCRIPT_PATH = BASE + '/package/updatescript.js'
 var RUNNING_PATH = BASE + '/running.txt'
+var START_PATH = BASE + '/start.txt'
 var TIMEOUT = 600000
 
 var child = null
@@ -55,11 +56,18 @@ function executeScript () {
   // TODO: check sig, and make sure we only run this once to completion
   if (running) return
 
+  var atmworking = isWorking()
+  if (atmworking) {
+    console.log("Can't run, atm is working")
+    return
+  }
+  
   var exists = fs.existsSync(SCRIPT_PATH)
   if (!exists) {
     console.error('Script file not present: %s', SCRIPT_PATH)
     return
   }
+  
   var success = start()
   if (!success) {
     console.log("Can't run, there's a new update")
@@ -103,4 +111,8 @@ function cleanUp () {
   fs.unlinkSync(RUNNING_PATH)
   running = false
   stoptUpdater()
+}
+
+function isWorking(){
+  return fs.existsSync(START_PATH)
 }
